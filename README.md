@@ -21,11 +21,31 @@ Une application web simple de calculatrice qui effectue uniquement des additions
 
 ## 🛠️ Installation
 
+### Option 1 : Installation classique
+
 1. Clonez le dépôt ou téléchargez les fichiers du projet
 
 2. Installez les dépendances :
 ```bash
 npm install
+```
+
+### Option 2 : Utilisation avec Docker 🐳
+
+1. Assurez-vous d'avoir Docker et Docker Compose installés sur votre machine
+
+2. Construisez et lancez l'application :
+```bash
+docker-compose up -d
+```
+
+Ou avec Docker uniquement :
+```bash
+# Construire l'image
+docker build -t calculatrice-app .
+
+# Lancer le conteneur
+docker run -d -p 3000:3000 --name calculatrice calculatrice-app
 ```
 
 ## 🎮 Utilisation
@@ -43,6 +63,28 @@ npm run dev
 ```
 
 L'application sera accessible à l'adresse : `http://localhost:3000`
+
+### 🐳 Commandes Docker utiles
+
+```bash
+# Voir les logs de l'application
+docker-compose logs -f
+
+# Arrêter l'application
+docker-compose down
+
+# Reconstruire l'image après modifications
+docker-compose up -d --build
+
+# Accéder au conteneur en cours d'exécution
+docker exec -it calculatrice-app sh
+
+# Nettoyer les images et conteneurs
+docker-compose down --rmi all --volumes
+
+# Voir l'état de santé du conteneur
+docker ps
+```
 
 ### Utiliser la calculatrice
 
@@ -113,6 +155,9 @@ calculatrice-jenkins/
 ├── server.js            # Serveur Express
 ├── server.test.js       # Tests de l'API
 ├── package.json         # Configuration npm
+├── Dockerfile          # Configuration Docker
+├── docker-compose.yml  # Configuration Docker Compose
+├── .dockerignore       # Fichiers à ignorer lors du build Docker
 └── README.md           # Ce fichier
 ```
 
@@ -150,6 +195,7 @@ Effectue l'addition de deux nombres.
 - **Frontend :** HTML5, CSS3, JavaScript vanilla
 - **Tests :** Jest, Supertest
 - **Design :** Interface moderne avec gradients et animations CSS
+- **Conteneurisation :** Docker, Docker Compose
 
 ## 📝 Notes
 

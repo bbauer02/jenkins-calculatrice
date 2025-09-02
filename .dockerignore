@@ -1,0 +1,36 @@
+# Dépendances
+node_modules/
+npm-debug.log*
+
+# Tests et couverture
+coverage/
+*.test.js
+server.test.js
+
+# Fichiers de développement
+.git/
+.gitignore
+README.md
+
+# Fichiers de l'IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Fichiers OS
+.DS_Store
+Thumbs.db
+
+# Variables d'environnement
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Fichiers temporaires
+*.tmp
+*.temp
