@@ -1,0 +1,15 @@
+# Configuration de Jenkins par fichier (casc/jenkins.yaml)
+configuration-as-code
+# Interface en français, quelle que soit la langue du navigateur
+locale
+# Git et GitHub (webhook, GitHub App)
+git
+github
+github-branch-source
+# Pipelines et leur visualisation
+workflow-aggregator
+pipeline-stage-view
+# Confort
+credentials-binding
+timestamper
+ws-cleanup

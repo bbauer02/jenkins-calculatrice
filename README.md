@@ -1,167 +1,63 @@
-# Calculatrice d'Addition
+# TP Jenkins — Calculatrice d'Addition
 
-Une application web simple de calculatrice qui effectue uniquement des additions, développée avec Node.js, Express et une interface graphique moderne.
+Dépôt support du TP **« Intégration continue avec Jenkins »**.
+Il contient une petite application web Node.js (une calculatrice d'additions, avec ses tests Jest)
+et tout le nécessaire pour lancer Jenkins avec Docker.
 
-## 🚀 Fonctionnalités
+## Démarrer
 
-- ✨ Interface graphique moderne et responsive
-- ➕ Calcul d'additions uniquement
-- ⌨️ Saisie directe d'expressions (ex: 12 + 34)
-- 🖱️ Clavier virtuel cliquable intégré
-- 📊 Historique des 10 derniers calculs (cliquables pour réutilisation)
-- 🔢 Support des nombres entiers et décimaux
-- ✅ Tests unitaires complets avec Jest
-- 🎨 Design épuré avec animations fluides
-- 🎹 Support complet du clavier physique
+1. Créez **votre** dépôt à partir de ce template : bouton **Use this template** → **Create a new repository**.
+2. Clonez votre dépôt, puis lancez Jenkins :
 
-## 📋 Prérequis
+   ```bash
+   cd jenkins
+   ./init-env.sh                  # une seule fois : identifiants admin, port, URL
+   docker compose up -d --build   # Jenkins sur http://localhost:8080
+   ```
 
-- Node.js (version 14 ou supérieure)
-- npm (gestionnaire de paquets Node.js)
+3. Suivez le cours, et vérifiez chaque étape avec :
 
-## 🛠️ Installation
+   ```bash
+   ./check.sh <numéro d'étape>    # à lancer à la racine du dépôt
+   ```
 
-1. Clonez le dépôt ou téléchargez les fichiers du projet
+   Sous Windows, lancez les scripts depuis **Git Bash**.
 
-2. Installez les dépendances :
+## Contenu
+
+| Chemin | Rôle |
+|---|---|
+| `server.js`, `src/`, `public/` | L'application (Express, port 3000) |
+| `*.test.js` | Tests unitaires et d'API (`npm test`) |
+| `jenkins/` | Image Jenkins du TP (version figée, plugins, configuration as code) |
+| `check.sh` | Vérification automatique des étapes du TP |
+
+Les fichiers `Dockerfile`, `docker-compose.yaml`, `calculatrice-app.sh` et `Jenkinsfile` sont
+**à écrire pendant le TP**.
+
+## Vous êtes bloqué ?
+
+Chaque étape importante a une branche de correction. Pour récupérer les fichiers d'une étape
+dans votre dépôt (vos autres fichiers ne sont pas supprimés) :
+
+```bash
+git fetch https://github.com/bbauer02/jenkins-calculatrice.git solution-etape-4
+git checkout FETCH_HEAD -- .
+git commit -m "Reprise à partir de la solution de l'étape 4"
+git push
+```
+
+| Branche | État à la fin de l'étape |
+|---|---|
+| `solution-etape-4` | Dockerfile, docker-compose.yaml, calculatrice-app.sh |
+| `solution-etape-6` | + Jenkinsfile complet (déclenché par scrutation) |
+| `solution-etape-8` | Jenkinsfile déclenché par le webhook GitHub |
+| `exercice-debug` | Un Jenkinsfile contenant 3 erreurs, à corriger (exercice) |
+
+## Lancer l'application sans Docker
+
 ```bash
 npm install
-```
-
-## 🎮 Utilisation
-
-### Démarrer l'application
-
-Pour lancer le serveur en mode production :
-```bash
-npm start
-```
-
-Pour lancer le serveur en mode développement (avec rechargement automatique) :
-```bash
-npm run dev
-```
-
-L'application sera accessible à l'adresse : `http://localhost:3000`
-
-### Utiliser la calculatrice
-
-#### Méthode 1 : Saisie au clavier
-1. Tapez directement votre expression dans le champ (ex: 25 + 17)
-2. Appuyez sur Entrée ou cliquez sur "="
-3. Le résultat s'affiche instantanément
-
-#### Méthode 2 : Clavier virtuel
-1. Cliquez sur les boutons numériques pour composer votre calcul
-2. Utilisez le bouton "+" pour l'addition
-3. Cliquez sur "=" pour calculer
-
-#### Raccourcis clavier
-- **Chiffres (0-9)** : Ajoute le chiffre
-- **+** : Ajoute le signe plus
-- **.** : Ajoute un point décimal
-- **Entrée ou =** : Calcule le résultat
-- **Échap ou C** : Efface tout
-- **Retour arrière** : Efface le dernier caractère
-
-#### Historique
-- Les 10 derniers calculs sont conservés
-- Cliquez sur un calcul dans l'historique pour le réutiliser
-
-### 📸 Aperçu de l'interface
-L'interface propose :
-- Un champ de saisie unique pour taper directement l'expression (ex: 12 + 34)
-- Un clavier virtuel complet avec chiffres, point décimal et opérateur +
-- Boutons colorés : 
-  - Chiffres en gris clair
-  - Opérateur + en bleu
-  - Effacer (C) en rouge
-  - Retour (←) en orange
-  - Égal (=) en violet avec gradient
-- Un affichage clair du résultat sous l'expression
-- Un historique cliquable des calculs précédents
-- Des animations fluides et un design moderne
-
-## 🧪 Tests
-
-### Lancer les tests
-```bash
 npm test
+npm start      # http://localhost:3000
 ```
-
-### Lancer les tests en mode watch
-```bash
-npm run test:watch
-```
-
-### Générer un rapport de couverture
-```bash
-npm run test:coverage
-```
-
-## 📁 Structure du projet
-
-```
-calculatrice-jenkins/
-├── public/              # Fichiers statiques (frontend)
-│   ├── index.html      # Page HTML principale
-│   ├── styles.css      # Styles CSS
-│   └── app.js          # JavaScript côté client
-├── src/                 # Code source
-│   ├── calculatrice.js  # Module de calcul
-│   └── calculatrice.test.js  # Tests du module
-├── server.js            # Serveur Express
-├── server.test.js       # Tests de l'API
-├── package.json         # Configuration npm
-└── README.md           # Ce fichier
-```
-
-## 🔧 API
-
-### POST /api/addition
-
-Effectue l'addition de deux nombres.
-
-**Corps de la requête :**
-```json
-{
-  "nombre1": 5,
-  "nombre2": 3
-}
-```
-
-**Réponse réussie (200) :**
-```json
-{
-  "resultat": 8
-}
-```
-
-**Réponse d'erreur (400) :**
-```json
-{
-  "erreur": "Message d'erreur descriptif"
-}
-```
-
-## 🎨 Technologies utilisées
-
-- **Backend :** Node.js, Express.js
-- **Frontend :** HTML5, CSS3, JavaScript vanilla
-- **Tests :** Jest, Supertest
-- **Design :** Interface moderne avec gradients et animations CSS
-
-## 📝 Notes
-
-- L'application ne fait que des additions conformément aux spécifications
-- Tous les nombres (entiers, décimaux, négatifs) sont supportés
-- Les chaînes numériques sont automatiquement converties
-- L'historique est stocké uniquement côté client (perdu au rechargement)
-
-## 🤝 Contribution
-
-Ce projet est un exemple simple à des fins éducatives. N'hésitez pas à le forker et à l'améliorer !
-
-## 📄 Licence
-
-Ce projet est sous licence ISC.

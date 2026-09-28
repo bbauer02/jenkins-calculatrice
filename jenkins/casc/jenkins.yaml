@@ -1,0 +1,23 @@
+# Configuration de Jenkins "as code" (plugin configuration-as-code).
+# Les valeurs ${...} viennent du fichier jenkins/.env (voir init-env.sh).
+jenkins:
+  systemMessage: "Jenkins du TP CI/CD — calculatrice"
+  numExecutors: 2
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "${JENKINS_ADMIN_ID}"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+unclassified:
+  location:
+    url: "${JENKINS_URL}"
+
+appearance:
+  locale:
+    systemLocale: "fr"
+    ignoreAcceptLanguage: true

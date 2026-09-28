@@ -1,0 +1,26 @@
+# Fichiers inutiles dans l'image de l'application.
+# Attention : ne pas exclure les fichiers *.test.js, ils sont exécutés
+# par "npm test" pendant la construction de l'image.
+
+# Dépendances (réinstallées par "npm ci" dans l'image)
+node_modules/
+npm-debug.log*
+coverage/
+
+# Git et outillage CI (pas besoin dans l'image)
+.git/
+.gitignore
+jenkins/
+Jenkinsfile
+check.sh
+*.md
+
+# Fichiers de l'IDE et de l'OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Variables d'environnement
+.env
+.env.*

@@ -1,0 +1,35 @@
+# Lancement de Jenkins pour le TP :
+#   ./init-env.sh          (une seule fois : crée le fichier .env)
+#   docker compose up -d --build
+name: jenkins
+
+services:
+  jenkins:
+    build: .
+    image: jenkins-tp:2.568.3
+    container_name: jenkins
+    restart: unless-stopped
+    ports:
+      # Port de Jenkins sur la machine (modifiable dans .env si 8080 est déjà pris)
+      - "${JENKINS_PORT:-8080}:8080"
+    env_file: .env
+    environment:
+      # Pas d'assistant de démarrage : le compte admin est créé par casc/jenkins.yaml
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+      CASC_JENKINS_CONFIG: /var/jenkins_conf/jenkins.yaml
+    volumes:
+      # Données de Jenkins (jobs, builds, credentials) : conservées si le conteneur est recréé
+      - jenkins_home:/var/jenkins_home
+      # Accès au démon Docker de l'hôte
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Configuration as code, en lecture seule
+      - ./casc:/var/jenkins_conf:ro
+    group_add:
+      # Groupe propriétaire du socket Docker (détecté par init-env.sh)
+      - "${DOCKER_GID:?Lancez d'abord ./init-env.sh}"
+    extra_hosts:
+      # Permet aux jobs de joindre l'hôte, et donc l'application sur le port 3000
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  jenkins_home:
