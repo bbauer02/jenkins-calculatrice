@@ -189,7 +189,7 @@ etape_6() {
   local job
   for job in BuildCalculatriceJob TestCalculatriceJob; do
     if job_existe "$job" && ! jenkins_cat "jobs/$job/config.xml" | grep -q "<disabled>true</disabled>"; then
-      ko "$job est toujours actif : deux jobs risquent de déployer en même temps" "Page de $job → « Désactiver le projet »."
+      ko "$job est toujours actif : deux jobs risquent de déployer en même temps" "$job → Configure → interrupteur « Enabled » sur désactivé → Save."
     fi
   done
 }
