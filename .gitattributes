@@ -1,0 +1,10 @@
+# Fins de ligne Unix obligatoires : ces fichiers sont exécutés sous Linux
+# (conteneurs, EC2) ou dans Git Bash. Avec des fins de ligne Windows (CRLF),
+# les scripts échouent ("bash\r: No such file or directory").
+*.sh        text eol=lf
+Jenkinsfile text eol=lf
+Dockerfile  text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf
+*.txt       text eol=lf
+.env*       text eol=lf
