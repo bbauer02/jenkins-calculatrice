@@ -2,7 +2,6 @@
 # Vérification automatique des étapes du TP Jenkins.
 # Usage : ./check.sh <numéro d'étape>      (à lancer à la racine du dépôt)
 #         ./check.sh                        (liste des étapes)
-export MSYS_NO_PATHCONV=1   # Git Bash (Windows) : ne pas convertir les chemins /var/...
 cd "$(dirname "$0")"
 
 ECHECS=0
@@ -14,7 +13,8 @@ titre(){ echo; echo "── $1"; }
 # --- Outils -----------------------------------------------------------------
 
 # Lit un fichier du dossier /var/jenkins_home du conteneur jenkins
-jenkins_cat() { docker exec jenkins cat "/var/jenkins_home/$1" 2>/dev/null; }
+# (MSYS_NO_PATHCONV : sous Git Bash, ne pas convertir le chemin /var/... en chemin Windows)
+jenkins_cat() { MSYS_NO_PATHCONV=1 docker exec jenkins cat "/var/jenkins_home/$1" 2>/dev/null; }
 
 # Numéro d'un build remarquable d'un job (lastSuccessfulBuild, lastFailedBuild…), vide si aucun
 permalien() {
@@ -158,10 +158,10 @@ etape_5() {
   local echec succes
   echec=$(permalien BuildCalculatriceJob lastFailedBuild)
   succes=$(permalien BuildCalculatriceJob lastSuccessfulBuild)
-  if [ -n "$echec" ]; then ok "Un test unitaire cassé a bien fait échouer le build (#$echec)"
-  else ko "BuildCalculatriceJob n'a jamais échoué" "Faites l'exercice « Casser le build » : modifiez un test pour qu'il échoue, poussez."; fi
+  if [ -n "$echec" ]; then ok "Le bug a bien fait échouer le build (#$echec)"
+  else ko "BuildCalculatriceJob n'a jamais échoué" "Faites l'exercice « Casser le build » : introduisez un bug dans src/calculatrice.js, poussez."; fi
   if [ -n "$echec" ] && [ -n "$succes" ] && [ "$succes" -gt "$echec" ]; then ok "Le build a été réparé (#$succes)"
-  else ko "Le build n'a pas été réparé depuis l'échec" "Corrigez le test, poussez, et vérifiez que le build redevient vert."; fi
+  else ko "Le build n'a pas été réparé depuis l'échec" "Corrigez le bug, poussez, et vérifiez que le build redevient vert."; fi
 }
 
 etape_6() {
@@ -186,6 +186,12 @@ etape_6() {
   else ko "Le pipeline est encore saisi dans Jenkins" "Definition → « Pipeline script from SCM », Script Path : Jenkinsfile."; fi
   if dernier_build_ok CalculatricePipeline; then ok "Le dernier build du pipeline est vert"
   else ko "Le dernier build du pipeline n'est pas un succès" "Ouvrez le build : l'étape en rouge indique où chercher."; fi
+  local job
+  for job in BuildCalculatriceJob TestCalculatriceJob; do
+    if job_existe "$job" && ! jenkins_cat "jobs/$job/config.xml" | grep -q "<disabled>true</disabled>"; then
+      ko "$job est toujours actif : deux jobs risquent de déployer en même temps" "Page de $job → « Désactiver le projet »."
+    fi
+  done
 }
 
 etape_7() {
