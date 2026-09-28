@@ -5,10 +5,12 @@
 cd "$(dirname "$0")"
 
 ECHECS=0
-ok()   { echo "  ✅ $1"; }
-ko()   { echo "  ❌ $1"; echo "     👉 $2"; ECHECS=$((ECHECS + 1)); }
-info() { echo "  ℹ️  $1"; }
-titre(){ echo; echo "── $1"; }
+# Couleurs uniquement si la sortie est un terminal
+if [ -t 1 ]; then VERT=$'\e[32m'; ROUGE=$'\e[31m'; GRAS=$'\e[1m'; FIN=$'\e[0m'; else VERT=; ROUGE=; GRAS=; FIN=; fi
+ok()   { echo "  ${VERT}✔${FIN} $1"; }
+ko()   { echo "  ${ROUGE}✘ $1${FIN}"; echo "     → $2"; ECHECS=$((ECHECS + 1)); }
+info() { echo "  • $1"; }
+titre(){ echo; echo "${GRAS}── $1${FIN}"; }
 
 # --- Outils -----------------------------------------------------------------
 
@@ -273,8 +275,8 @@ esac
 
 echo
 if [ "$ECHECS" -eq 0 ]; then
-  echo "🎉 Étape $1 validée ! Vous pouvez passer à la suite."
+  echo "${VERT}✔ Étape $1 validée !${FIN} Vous pouvez passer à la suite."
 else
-  echo "🔧 $ECHECS point(s) à corriger. Suivez les indications 👉 puis relancez ./check.sh $1"
+  echo "${ROUGE}✘ $ECHECS point(s) à corriger.${FIN} Suivez les indications → puis relancez ./check.sh $1"
   exit 1
 fi
