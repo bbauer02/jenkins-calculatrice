@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     triggers {
-        // Vérifie le dépôt environ toutes les 2 minutes et lance le pipeline s'il a changé
-        // (remplacé par le webhook GitHub dans le chapitre « Jenkins sur AWS »)
-        pollSCM('H/2 * * * *')
+        // Lancé par le webhook GitHub à chaque push
+        githubPush()
     }
 
     options {
