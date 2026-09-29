@@ -176,8 +176,8 @@ etape_6() {
     nb=$(grep -c "stage(" Jenkinsfile)
     if [ "$nb" -ge 4 ]; then ok "Le Jenkinsfile contient $nb stages"
     else ko "Le Jenkinsfile ne contient que $nb stage(s)" "Attendu : Tests, Build, Déploiement, Smoke test."; fi
-    if grep -q "build job" Jenkinsfile; then
-      ko "Le Jenkinsfile appelle encore d'autres jobs ('build job')" "La version finale doit tout faire elle-même (étape 6.3)."
+    if grep -qE "^[[:space:]]*build[[:space:]]*(job|\(|'|\")" Jenkinsfile; then
+      ko "Le Jenkinsfile appelle encore d'autres jobs (instruction build)" "La version finale doit tout faire elle-même (étape 6.2)."
     fi
   fi
   if ! job_existe CalculatricePipeline; then
